@@ -135,10 +135,10 @@
                     }
                     return burnedLine.replace(/[\s　]+/g, ' ');;
                 } else {
-                    let cleanLine;
-                    cleanLine = line.replace(/大草原/g,'大象牙');
-                    cleanLine = line.replace(/草/g,'牙');
-                    cleanLine = line.replace(/w/g,'j');
+                    let cleanLine = line;
+                    cleanLine = cleanLine.replace(/大草原/g,'大象牙');
+                    cleanLine = cleanLine.replace(/草/g,'牙');
+                    cleanLine = cleanLine.replace(/w/g,'j');
                     cleanLine = cleanLine.replace(/ｗ/,'ｊ');
                     return cleanLine;
                 }
