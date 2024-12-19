@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico">
+    <title>Toot整形ツール</title>
+    <style>
+        body {
+            font-family: 'メイリオ', sans-serif;
+            max-width: 750px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #181828;
+        }
+        .container {
+            background-color: #181828;
+            color: #FFF;
+            padding: 30px;
+            border: 1px solid #313144;
+            border-radius: 4px;
+        }
+        h1 {
+            color: #FFF;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #606085;
+        }
+        .text-area-container {
+            display: flex;
+            flex-flow: column;
+            margin-bottom: 20px;
+            align-items: flex-end;
+
+            border: 1px solid #313144;
+            border-radius: 4px;
+            background-color: #292938;
+        }
+        .text-column {
+            flex: 1;
+        }
+        textarea {
+            width: 96%;
+            padding: 2%;
+            height: 160px;
+            border: 0px solid #313144;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            background-color: #292938;
+            color: #FFF;
+            resize: none;
+        }
+        textarea:focus {
+            outline: 0px #313134 solid;
+
+        }
+        .format-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .radio-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .copy-button {
+            padding: 8px 32px;
+            background-color: #6364FF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 16px;
+            margin-right: 16px;
+        }
+        .copy-button:hover {
+            background-color: #5634CC;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Toot整形ツール</h1>
+        
+        <div class="description">
+            上のテキストエリアに文章を貼り付けますと、下に正しい文章が表示されますの。
+        </div>
+
+        <div class="format-options">
+            <div class="radio-container">
+                <input type="radio" id="burn" name="formatType" value="burn" checked>
+                <label for="normalize">焼く</label>
+            </div>
+            <div class="radio-container">
+                <input type="radio" id="pluck" name="formatType" value="pluck">
+                <label for="pluck">毟る</label>
+            </div>
+        </div>
+
+        <div class="text-area-container">
+            <textarea id="inputText" placeholder="ここにテキストを入力または貼り付けてくださいまし"></textarea>
+        </div>
+        
+        <div class="text-area-container">
+            <textarea id="outputText"></textarea>
+            <button class="copy-button" onclick="copyResult()">コピーします</button>
+        </div>
+    </div>
+
+    <script>
+        const inputText = document.getElementById('inputText');
+        const outputText = document.getElementById('outputText');
+        const formatRadios = document.getElementsByName('formatType');
+
+        function formatText(text, type) {
+            const lines = text.split(/\n/);
+            const formattedLines = lines.map(line => {
+                if (type === 'burn') {
+                    let burnedLine = '';
+                    for (var i = 0; i < line.length; ++i) {
+                        if(/[wｗ]|草/.test(line.charAt(i))){
+                            burnedLine = burnedLine + '🔥';
+                        }else{
+                            burnedLine = burnedLine + ' ';
+                        }
+                    }
+                    return burnedLine.replace(/[\s　]+/g, ' ');;
+                } else {
+                    let cleanLine;
+                    cleanLine = line.replace(/大草原/g,'大象牙');
+                    cleanLine = line.replace(/草/g,'牙');
+                    cleanLine = line.replace(/w/g,'j');
+                    cleanLine = cleanLine.replace(/ｗ/,'ｊ');
+                    return cleanLine;
+                }
+            });
+            return formattedLines.join('\n');
+        }
+
+        inputText.addEventListener('input', updateOutput);
+        formatRadios.forEach(radio => {
+            radio.addEventListener('change', updateOutput);
+        });
+
+        function updateOutput() {
+            const formatType = document.querySelector('input[name="formatType"]:checked').value;
+            outputText.value = formatText(inputText.value, formatType);
+        }
+
+        function copyResult() {
+            outputText.select();
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            
+            const copyButton = document.querySelector('.copy-button');
+            const originalText = copyButton.textContent;
+            copyButton.textContent = 'コピー @sita';
+            setTimeout(() => {
+                copyButton.textContent = originalText;
+            }, 1800);
+        }
+    </script>
+</body>
+</html>
